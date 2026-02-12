@@ -1,0 +1,62 @@
+# Configuration for Second Order Learning System
+
+# Global settings
+seed: 42
+device: "cpu" # or "cuda"
+
+# World Model
+world_model:
+  enabled: true
+  divergence_threshold: 0.8
+  penalty_scale: 1.0
+  loss_weight: 0.1  # Weight for WM loss in meta-loss
+  
+# Meta-Training
+meta_training:
+  num_episodes: 1000
+  meta_lr: 0.001
+  rollout_len: 20
+  performance_loss_weight: 0.1  # Weight for task performance in meta-loss
+  final_loss_weight: 2.0  # Weight for final step loss
+  
+# Population Based Training
+pbt:
+  enabled: true
+  population_size: 4
+  exploit_interval: 20
+  mutation:
+    meta_lr_range: [0.8, 1.2]
+    wm_weight_range: [0.8, 1.2]
+    plasticity_range: [0.8, 1.2]
+    
+# Curriculum (Adaptive)
+curriculum:
+  enabled: true
+  adaptive: true  # If true, progression based on performance
+  stability_threshold: 0.8  # Reward stability required to advance
+  wm_accuracy_threshold: 0.7  # WM accuracy required to advance
+  min_episodes_per_phase: 50  # Minimum episodes before considering advancement
+  phases:
+    - name: "Phase 1: Easy"
+      tasks: ["RegressionTask"]
+      rollout_len: 10
+    - name: "Phase 2: Mixed"
+      tasks: ["RegressionTask", "ClassificationTask"]
+      rollout_len: 20
+    - name: "Phase 3: Adversarial"
+      tasks: ["AdversarialTask", "ClassificationTask"]
+      rollout_len: 30
+
+# Self-Play
+self_play:
+  enabled: true
+  win_bonus: 0.05
+  comparison_weight: 0.1  # Weight for comparison signal in meta-loss
+
+# Plasticity Annealing
+plasticity:
+  enabled: true
+  initial_scale: 1.0
+  target_scale: 0.3
+  annealing_episodes: 800
+  penalty_weight: 0.05  # Penalty for high plasticity in meta-loss
