@@ -294,9 +294,3 @@ Use controlled experiments when modifying architecture.
 # 👤 Author
 
 Developed as a high-performance experimental meta-learning system with evolutionary optimization and world-model guidance.
-
----
-
-# 📜 License
-
-MIT License
